@@ -143,12 +143,12 @@ int main(int argc, char **argv) {
      //test(h);
 
      char word[16];
-     char def[2048] = "test";
+     char def[512] = "test";
      while (scanf("%s", word) > 0) {
          if (fgets(def, sizeof(def), stdin) != NULL){
              int len = strlen(def);
-             if (len > sizeof(def))  {
-                printf("Error detected at %s", word);
+             if (len == sizeof(def)-1)  {
+                printf("Size issues for definition, detected at %s\n", word);
                 exit(1);
              }
              if (len > 0) {
