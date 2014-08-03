@@ -148,8 +148,10 @@ int main(int argc, char **argv) {
         fgets(def, sizeof(def), stdin);
         int len = strlen(def);
         if (len == sizeof(def)-1)  {
-           printf("Size issues for definition, detected at %s\n", word);
-           exit(1);
+            printf("Size issues for definition, detected at %s, recovering\n", word);
+            do {
+                fgets(def, sizeof(def), stdin);
+            } while (strlen(def) == sizeof(def)-1);
         }
         if (len > 1) {
             def[len-1] = 0;
