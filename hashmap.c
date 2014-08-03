@@ -139,30 +139,25 @@ void test(HashMap *h) {
 }
 
 int main(int argc, char **argv) {
-     HashMap *h = newHashMap();
-     //test(h);
+    HashMap *h = newHashMap();
+    //test(h);
 
-     char word[16];
-     char def[512] = "test";
-     while (scanf("%s", word) > 0) {
-         if (fgets(def, sizeof(def), stdin) != NULL){
-             int len = strlen(def);
-             if (len == sizeof(def)-1)  {
-                printf("Size issues for definition, detected at %s\n", word);
-                exit(1);
-             }
-             if (len > 0) {
-                 def[len-1] = 0;
-                 putValue(h, word, def);
-             } else {
-                 printf("Discard %s ", word);
-             }
-         } else {
-             printf("Discard %s ", word);
-         }
-      
-     }
-     dumpHash(h, false);
+    char word[16];
+    char def[512] = "test";
+    while (scanf("%s", word) > 0) {
+        fgets(def, sizeof(def), stdin);
+        int len = strlen(def);
+        if (len == sizeof(def)-1)  {
+           printf("Size issues for definition, detected at %s\n", word);
+           exit(1);
+        }
+        if (len > 1) {
+            def[len-1] = 0;
+            putValue(h, word, def);
+        } else {
+            printf("No definition for %s, not saving\n", word);
+        }
+    }
+    dumpHash(h, false);
     return 0;
-
 }
