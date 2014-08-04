@@ -15,15 +15,15 @@ int func(int n) {
 int predict2(int n) {
     int i, r = 0;
     double r0, n0 = (double)n - 1;
-    int c = (n*n*n - n)/2;
+    double c =(double)(n*n*n - n)/2;
 
     for (i=1; i < n; i++)
         r += (i*(i+1)/2);
 
     r0 = (((n0*n0*n0 / 3) + ((n0*n0) / 2) + n0 / 6)+ ( n0*(n0+1)/2)) / 2;
-    printf("%f  ", r0);
+    printf("%f  %d ", r0, r);
 
-    return c - (int)r0;
+    return (int)(c - r0);
 }
 
 int predict(int n) {
