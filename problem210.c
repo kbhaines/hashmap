@@ -14,11 +14,16 @@ int func(int n) {
 
 int predict2(int n) {
     int i, r = 0;
+    double r0, n0 = (double)n - 1;
     int c = (n*n*n - n)/2;
 
     for (i=1; i < n; i++)
         r += (i*(i+1)/2);
-    return c - r;
+
+    r0 = (((n0*n0*n0 / 3) + ((n0*n0) / 2) + n0 / 6)+ ( n0*(n0+1)/2)) / 2;
+    printf("%f  ", r0);
+
+    return c - (int)r0;
 }
 
 int predict(int n) {
