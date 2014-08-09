@@ -1,14 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "hashmap.h"
 
 typedef struct KeyVal KeyVal;
-typedef unsigned char uint8;
-typedef int int32;
-typedef unsigned int uint32;
-typedef uint8 bool;
-#define true 1
-#define false 0
 
 struct KeyVal {
     char *key;
@@ -18,13 +13,13 @@ struct KeyVal {
 
 
 #define MAX_BUCKETS 1024
-typedef struct {
+typedef struct HashMap {
     KeyVal *buckets[MAX_BUCKETS];
-    uint32 (*func)(const char *);
+    uint32 (*hashFunc)(const char *);
 } HashMap;
 
 static KeyVal *findKeyVal(const HashMap *hm, const char *key) {
-    KeyVal *kv = hm->buckets[hm->func(key)];
+    KeyVal *kv = hm->buckets[hm->hashFunc(key)];
     while (kv) {
        if (strcmp(kv->key, key) == 0) {
            return kv;
@@ -50,7 +45,7 @@ static uint32 hashFunction1(const char *key) {
 }
 
 
-static void dumpHash(HashMap *h, bool dumpContents) {
+void dumpHash(HashMap *h, bool dumpContents) {
 
     uint32 b;
     for (b = 0; b < MAX_BUCKETS; b++) {
@@ -79,7 +74,7 @@ static void dumpHash(HashMap *h, bool dumpContents) {
 
 const char *putValue(HashMap *hm, const char *key, const char *value) {
 
-    int idx = hm->func(key);
+    int idx = hm->hashFunc(key);
     if (idx >= MAX_BUCKETS) {
        return NULL;
     }
@@ -113,53 +108,7 @@ HashMap *newHashMap(void) {
     int j;
     for (j = 0; j < MAX_BUCKETS; j++)
        h->buckets[j] = NULL;
-    h->func = hashFunction2;
+    h->hashFunc = hashFunction2;
     return h;
 }
 
-void test(HashMap *h) {
-     char *names[][2] = { { "Kevin", "Haines" }, 
-             { "Marcelle", "Haines" },
-             { "Loen", "Miles" },
-             { "Kev", "Miles" },
-             { "Steve", "Wilson"}, 
-             { NULL, NULL }
-     };
-
-     char *(*name)[2];
-     for (name = names; (*name)[0] != NULL; name++) {
-     printf("Adding %s:%s\n", (*name)[0], (*name)[1]);
-     putValue(h, (*name)[0], (*name)[1]);
-     }
-     dumpHash(h, true);
-     putValue(h,"Kevin","Miles");
-
-     printf("\nUpdate\n");
-     dumpHash(h, true);
-}
-
-int main(int argc, char **argv) {
-    HashMap *h = newHashMap();
-    //test(h);
-
-    char word[16];
-    char def[512] = "test";
-    while (scanf("%s", word) > 0) {
-        fgets(def, sizeof(def), stdin);
-        int len = strlen(def);
-        if (len == sizeof(def)-1)  {
-            printf("Size issues for definition, detected at %s, recovering\n", word);
-            do {
-                fgets(def, sizeof(def), stdin);
-            } while (strlen(def) == sizeof(def)-1);
-        }
-        if (len > 1) {
-            def[len-1] = 0;
-            putValue(h, word, def);
-        } else {
-            printf("No definition for %s, not saving\n", word);
-        }
-    }
-    dumpHash(h, false);
-    return 0;
-}
