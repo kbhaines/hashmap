@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
         fgets(def, sizeof(def), stdin);
         int len = strlen(def);
         if (len == sizeof(def)-1)  {
-            printf("Definition is too long, detected at %s, recovering\n", word);
+            //printf("Definition is too long, detected at %s, recovering\n", word);
             do {
                 fgets(def, sizeof(def), stdin);
             } while (strlen(def) == sizeof(def)-1);
@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
             def[len-1] = 0;
             putValue(h, word, def);
         } else {
-            printf("No definition for %s, not saving\n", word);
+            //printf("No definition for %s, not saving\n", word);
         }
     }
     dumpHash(h, false);

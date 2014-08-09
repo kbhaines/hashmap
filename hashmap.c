@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "hashmap.h"
 
 typedef struct KeyVal KeyVal;
@@ -16,6 +17,7 @@ struct KeyVal {
 typedef struct HashMap {
     KeyVal *buckets[MAX_BUCKETS];
     uint32 (*hashFunc)(const char *);
+    uint32 numItems;
 } HashMap;
 
 static KeyVal *findKeyVal(const HashMap *hm, const char *key) {
@@ -34,12 +36,20 @@ static uint32 hashFunction2(const char *key) {
     uint32 hash = 0;
     int j, len = strlen(key);
     for (j = 0; j < len; j++ ) {
-       hash += key[j];
+       hash += key[j]*j*102019;
     }
     return hash % MAX_BUCKETS;
 }
 
-
+static uint32 hashFunction3(const char *key) {
+    uint32 hash = 5381;
+    int c;
+    while ( c = *key++ ) {
+        hash = ((hash << 5) + hash + c);
+    }
+    return hash % MAX_BUCKETS;
+}
+        
 static uint32 hashFunction1(const char *key) {
     return key[0]-32;
 }
@@ -48,14 +58,15 @@ static uint32 hashFunction1(const char *key) {
 void dumpHash(HashMap *h, bool dumpContents) {
 
     uint32 b;
+    uint32 deviation = 0;
+    uint32 idealAverageItems = h->numItems/MAX_BUCKETS;
     for (b = 0; b < MAX_BUCKETS; b++) {
-    
        if (h->buckets[b] != NULL) {
-           printf("%d ", b);
            KeyVal *kv = h->buckets[b];
            if (dumpContents)  {
                while (kv != NULL) {
-                   printf("%s:%s ", kv->key, kv->value);
+                   printf("%d ", b);
+                   printf("%s:%s \n", kv->key, kv->value);
                    kv = kv->next;
                }
            } else {
@@ -64,12 +75,13 @@ void dumpHash(HashMap *h, bool dumpContents) {
                    count ++;
                    kv = kv -> next;
                }
-               printf("%d items", count);
+               //printf("%d items", count);
+               deviation += abs(count - idealAverageItems);
            }
-           printf("\n");
+           //printf("\n");
        }
     }
-
+   printf("\nItems: %d  Deviation: %d  Ideal: %d\n", h->numItems, deviation/MAX_BUCKETS, idealAverageItems);
 }
 
 const char *putValue(HashMap *hm, const char *key, const char *value) {
@@ -91,6 +103,7 @@ const char *putValue(HashMap *hm, const char *key, const char *value) {
     newKv->value = strdup(value);
     newKv->next  = oldHeadKv;
     hm->buckets[idx] = newKv;
+    hm->numItems++;
     return key;
 }
 
@@ -108,7 +121,7 @@ HashMap *newHashMap(void) {
     int j;
     for (j = 0; j < MAX_BUCKETS; j++)
        h->buckets[j] = NULL;
-    h->hashFunc = hashFunction2;
+    h->hashFunc = hashFunction3;
     return h;
 }
 
