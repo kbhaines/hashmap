@@ -11,6 +11,7 @@ int main(int argc, char **argv) {
     HashMap *h = newHashMap();
 
     char line[512];
+    char **split = malloc(MAX_RESULTS * sizeof(char*));
     while (fgets(line, sizeof(line), stdin)) {
         int len = strlen(line);
         if (len == sizeof(line)-1)  {
@@ -20,8 +21,7 @@ int main(int argc, char **argv) {
             } while (strlen(line) == sizeof(line)-1);
         }
         line[len-1] = 0;
-        char **split;
-        int32 num = splitCsv(line, &split);
+        int32 num = splitCsvInPlace(line, split, MAX_RESULTS);
         if (num == 7) {
             char *globalVin = split[0];
             char *nasVin = split[1];
@@ -31,13 +31,8 @@ int main(int argc, char **argv) {
             char *country = split[5];
             char *recalls = split[6];
 
-            putValue(h, nasVin, recalls);
-            free(globalVin);
-            free(nasVin);
-            free(make);
-            free(model);
-            free(year);
-            free(country);
+            //printf("%s %s %s\n", nasVin, model, recalls);
+            putValue(h, nasVin, recalls != NULL ? strdup(recalls) : "");
         } else {
             printf("Incorrect format: %s\n", line);
         }
