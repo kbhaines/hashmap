@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "types.h"
@@ -21,12 +22,26 @@ int main(int argc, char **argv) {
         line[len-1] = 0;
         char **split;
         int32 num = splitCsv(line, &split);
-        int32 j;
-        for (j=0; j < num; j++) {
-            printf("%s / ", split[j]);
+        if (num == 7) {
+            char *globalVin = split[0];
+            char *nasVin = split[1];
+            char *make = split[2];
+            char *model = split[3];
+            char *year = split[4];
+            char *country = split[5];
+            char *recalls = split[6];
+
+            putValue(h, nasVin, recalls);
+            free(globalVin);
+            free(nasVin);
+            free(make);
+            free(model);
+            free(year);
+            free(country);
+        } else {
+            printf("Incorrect format: %s\n", line);
         }
-        printf("\n");
     }
-    //dumpHash(h, true);
+    dumpHash(h, false);
     return 0;
 }

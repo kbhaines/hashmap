@@ -7,8 +7,8 @@
 typedef struct KeyVal KeyVal;
 
 struct KeyVal {
-    char *key;
-    char *value;
+    const char *key;
+    const char *value;
     KeyVal *next;
 };
 
@@ -100,7 +100,7 @@ const char *putValue(HashMap *hm, const char *key, const char *value) {
     KeyVal *oldHeadKv = hm->buckets[idx];
     KeyVal *newKv = malloc(sizeof(KeyVal));
     newKv->key = strdup(key);
-    newKv->value = strdup(value);
+    newKv->value = (value);
     newKv->next  = oldHeadKv;
     hm->buckets[idx] = newKv;
     hm->numItems++;
@@ -108,7 +108,7 @@ const char *putValue(HashMap *hm, const char *key, const char *value) {
 }
 
 
-char *getValue(HashMap *hm, char *key) {
+const char *getValue(HashMap *hm, char *key) {
     KeyVal *kv = findKeyVal(hm, key);
     if (kv) {
        return kv -> value;
