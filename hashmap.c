@@ -13,7 +13,7 @@ struct KeyVal {
 };
 
 
-#define MAX_BUCKETS 1024
+#define MAX_BUCKETS (1024*1024)
 typedef struct HashMap {
     KeyVal *buckets[MAX_BUCKETS];
     uint32 (*hashFunc)(const char *);
