@@ -14,11 +14,11 @@ struct KeyVal {
 
 
 #define MAX_BUCKETS (1024*1024)
-typedef struct HashMap {
+struct HashMap {
     KeyVal *buckets[MAX_BUCKETS];
     uint32 (*hashFunc)(const char *);
     uint32 numItems;
-} HashMap;
+};
 
 static KeyVal *findKeyVal(const HashMap *hm, const char *key) {
     KeyVal *kv = hm->buckets[hm->hashFunc(key)];
