@@ -26,9 +26,10 @@ int func3(int n) {
 }
 
 int predict3(int n) {
-    int i, r = 0;
-    double r0, n0 = (double)n - 1;
-    double c =(double)(n*n*n - n)/2;
+    long p1 = (n*(n+1)/2);
+    long r;
+    r = p1*p1 + (n*(n+1)*(2*n+1)) / 6;
+    return (int) (r/2);
 }
 
 int predict(int n) {
@@ -38,7 +39,7 @@ int predict(int n) {
 int main(int argc, char **argv) {
 
     int n;
-    for ( n = 3; n<= 10; n++) {
-        printf("N is %d, predict: %d, result %d\n", n, predict(n), func3(n));
+    for ( n = 3; n<= 20; n++) {
+        printf("N is %d, predict: %d, result %d\n", n, predict3(n), func3(n));
     }
 }
