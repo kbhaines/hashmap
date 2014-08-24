@@ -17,7 +17,6 @@ struct VinVehicle {
     char *year;
     char *country;
     char *recalls;
-
 };
 
 const VinVehicle *vvGetFromCsv(const char *line) {
