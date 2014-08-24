@@ -22,8 +22,7 @@ struct VinVehicle {
 const VinVehicle *vvGetFromCsv(const char *line) {
 
     const int32 maxCsv = 7;
-
-    char **split = malloc(maxCsv * sizeof(char*));
+    char *split[maxCsv];
     int32 num = splitCsvInPlace(strdup(line), split, maxCsv);
     if (num == maxCsv) {
         VinVehicle *v = malloc(sizeof(VinVehicle));
@@ -33,7 +32,7 @@ const VinVehicle *vvGetFromCsv(const char *line) {
         v->model = split[3];
         v->year = split[4];
         v->country = split[5];
-        v->recalls = split[6] != NULL ? strdup(split[6]) : "";
+        v->recalls = split[6] != NULL ? split[6] : "";
         return v;
     } else {
         return NULL;
@@ -73,7 +72,18 @@ int vvMain(int argc, char **argv) {
     HashMap *h = newHashMap();
 
     char line[512];
-    while (fgets(line, sizeof(line), stdin)) {
+    if (argc != 2) {
+        printf("Usage: %s <vinfile>\n", argv[0]);
+        exit(0);
+    }
+    FILE *in = fopen(argv[1],"r");
+
+    if (!in) {
+        printf("Error opening %s\n", argv[1]);
+        exit(1);
+    }
+
+    while (fgets(line, sizeof(line), in)) {
         int len = strlen(line);
         if (len == sizeof(line)-1)  {
             //printf("Definition is too long, detected at %s, recovering\n", word);

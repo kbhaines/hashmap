@@ -1,6 +1,6 @@
 CC=gcc -g
-
 LIBS=-lcheck -lm -lpthread -lrt
+
 %.o=%.c %.h
 
 main: main.c vin.o hashmap.o csv.o
