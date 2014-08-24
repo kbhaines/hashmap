@@ -25,6 +25,10 @@ const char *makes[] = {
     "Land Rover"
 };
 
+const char *recalls[] = {
+    "","","","J037"
+};
+
 #test csvInput
     const VinVehicle *vv = vvGetFromCsv(csvLines[0]);
     ck_assert_ptr_eq(vv, NULL);
@@ -35,4 +39,5 @@ const char *makes[] = {
         ck_assert(vv != NULL);
         ck_assert_str_eq(vvGetNasVin(vv), nasVins[j]);
         ck_assert_str_eq(vvGetMake(vv), makes[j]);
+        ck_assert_str_eq(vvGetRecalls(vv), recalls[j]);
     }
