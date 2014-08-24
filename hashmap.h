@@ -7,9 +7,9 @@ typedef struct HashMap HashMap;
 
 extern HashMap *newHashMap(void);
 
-extern const char *getValue(HashMap *hm, char *key);
+extern const void *getValue(HashMap *hm, char *key);
 
-extern const char *putValue(HashMap *hm, const char *key, const char *value);
+extern const char *putValue(HashMap *hm, const char *key, const void *value);
 
 extern void dumpHash(HashMap *h, bool dumpContents);
 #endif

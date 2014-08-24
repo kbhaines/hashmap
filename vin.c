@@ -7,6 +7,23 @@
 
 #include "csv.h"
 
+
+struct VinVehicle {
+    char *globalVin;
+    char *nasVin; 
+    char *make; 
+    char *model;
+    char *year;
+    char *country;
+    char *recalls;
+
+};
+
+VinVehicle *vvGetFromCsv(const char *line) {
+
+}
+
+
 int main(int argc, char **argv) {
     HashMap *h = newHashMap();
 
@@ -21,18 +38,19 @@ int main(int argc, char **argv) {
             } while (strlen(line) == sizeof(line)-1);
         }
         line[len-1] = 0;
-        int32 num = splitCsvInPlace(line, split, MAX_RESULTS);
+        int32 num = splitCsvInPlace(strdup(line), split, MAX_RESULTS);
         if (num == 7) {
-            char *globalVin = split[0];
-            char *nasVin = split[1];
-            char *make = split[2];
-            char *model = split[3];
-            char *year = split[4];
-            char *country = split[5];
-            char *recalls = split[6];
+            VinVehicle *v = malloc(sizeof(VinVehicle));
+            v->globalVin = split[0];
+            v->nasVin = split[1];
+            v->make = split[2];
+            v->model = split[3];
+            v->year = split[4];
+            v->country = split[5];
+            v->recalls = split[6] != NULL ? strdup(split[6]) : "";
 
             //printf("%s %s %s\n", nasVin, model, recalls);
-            putValue(h, nasVin, recalls != NULL ? strdup(recalls) : "");
+            putValue(h, v->nasVin, v);
         } else {
             printf("Incorrect format: %s\n", line);
         }

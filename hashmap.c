@@ -8,7 +8,7 @@ typedef struct KeyVal KeyVal;
 
 struct KeyVal {
     const char *key;
-    const char *value;
+    const void *value;
     KeyVal *next;
 };
 
@@ -66,7 +66,7 @@ void dumpHash(HashMap *h, bool dumpContents) {
            if (dumpContents)  {
                while (kv != NULL) {
                    printf("%d ", b);
-                   printf("%s:%s \n", kv->key, kv->value);
+                   printf("%s \n", kv->key);
                    kv = kv->next;
                }
            } else {
@@ -84,7 +84,7 @@ void dumpHash(HashMap *h, bool dumpContents) {
    printf("\nItems: %d  Deviation: %d  Ideal: %d\n", h->numItems, deviation/MAX_BUCKETS, idealAverageItems);
 }
 
-const char *putValue(HashMap *hm, const char *key, const char *value) {
+const char *putValue(HashMap *hm, const char *key, const void *value) {
 
     int idx = hm->hashFunc(key);
     if (idx >= MAX_BUCKETS) {
@@ -93,14 +93,14 @@ const char *putValue(HashMap *hm, const char *key, const char *value) {
 
     KeyVal *updateKv = findKeyVal(hm, key);
     if (updateKv) {
-       updateKv -> value = strdup(value);
+       updateKv -> value = value;
        return key;
     }
 
     KeyVal *oldHeadKv = hm->buckets[idx];
     KeyVal *newKv = malloc(sizeof(KeyVal));
     newKv->key = strdup(key);
-    newKv->value = (value);
+    newKv->value = value;
     newKv->next  = oldHeadKv;
     hm->buckets[idx] = newKv;
     hm->numItems++;
@@ -108,7 +108,7 @@ const char *putValue(HashMap *hm, const char *key, const char *value) {
 }
 
 
-const char *getValue(HashMap *hm, char *key) {
+const void *getValue(HashMap *hm, char *key) {
     KeyVal *kv = findKeyVal(hm, key);
     if (kv) {
        return kv -> value;
