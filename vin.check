@@ -1,0 +1,38 @@
+#include "vin.h"
+
+/* None of these VINs/Models etc are actually valid */
+const char *csvLines[] = {
+    /* should fail */
+    "SAJWA4GBXELB54523,nSAJWA4GBXELB54523,Jaguar,XK 5.0 V8 NA Petrol Convert,2014", 
+
+    /* rest are good */
+    "SAJWA4GBXELB54523,nSAJWA4GBXELB54523,Jaguar,XK 5.0 V8 NA Petrol Convert,2014,USA,",
+    "SAJWA4EB4DLB50520,nSAJWA4EB4DLB50520,Land Rover,XK 5.0 V8 NA Petrol Convert,2013,USA,",
+    "SAJWA4HA0EMB52554,nSAJWA4HA0EMB52554,Land Rover,XK 5.0 V8 SC Petrol Coupe,2014,USA,J037"
+};
+
+const char *nasVins[] = {
+    "nSAJWA4GBXELB54523",
+    "nSAJWA4GBXELB54523",
+    "nSAJWA4EB4DLB50520",
+    "nSAJWA4HA0EMB52554"
+};
+
+const char *makes[] = {
+    "Jaguar",
+    "Jaguar",
+    "Land Rover",
+    "Land Rover"
+};
+
+#test csvInput
+    const VinVehicle *vv = vvGetFromCsv(csvLines[0]);
+    ck_assert_ptr_eq(vv, NULL);
+
+    int j;
+    for (j = 1; j < 4; j++) {
+        vv = vvGetFromCsv(csvLines[j]);
+        ck_assert(vv != NULL);
+        ck_assert_str_eq(vvGetNasVin(vv), nasVins[j]);
+        ck_assert_str_eq(vvGetMake(vv), makes[j]);
+    }
