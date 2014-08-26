@@ -2,6 +2,6 @@
 #include "web.h"
 
 int main(int argc, char **argv) {
-    webserver();
+    ws_init();
     return vvMain(argc, argv);
 }

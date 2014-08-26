@@ -5,11 +5,14 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 
-void webserver(void) {
+static int sock;
+
+void ws_init(void) {
 
     int port = 8080;
+    int backlog = 5;
 
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    sock = socket(AF_INET, SOCK_STREAM, 0);
 
     if (sock == -1) {
         printf("Error: Couldn't create socket");
@@ -25,5 +28,16 @@ void webserver(void) {
         printf("Error: Couldn't bind to port");
         exit(1);
     }
+
+    listen(sock, backlog);
 }
 
+
+int ws_accept() {
+    
+    struct sockaddr_in client_addr;
+    int client_len = sizeof(client_addr);
+    int newsock = accept(sock, (struct sockaddr *) &client_addr, &client_len);
+
+    return newsock;
+}
