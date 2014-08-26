@@ -3,7 +3,7 @@ LIBS=-lcheck -lm -lpthread -lrt
 
 %.o=%.c %.h
 
-main: main.c vin.o hashmap.o csv.o
+main: main.c vin.o hashmap.o csv.o web.o
 
 run: main
 	head -n 1000000 jlrdat/vehicle-data|/usr/bin/time -v ./main

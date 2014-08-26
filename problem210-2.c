@@ -43,6 +43,24 @@ int func4(int n) {
     return r;
 }
 
+int func5(int n) {
+    int i,j,k;
+    int r = 0;
+
+    for (i = 1; i <= n; i++) {
+        //printf("---i:%d", i);
+        for (j = 1; j <= n; j++) {
+            //printf("  j:%d", j);
+            for (k = i+j; k <= n; k++) {
+                r+=1;
+                //printf("  k:%d, r:%d",k,r);
+            }
+        }
+        //printf("\n");
+    }
+    return r;
+}
+
 #define MAX(p,q) ( (p) > (q) ? (p) : (q) )
 
 int predict4(int n) {
@@ -70,7 +88,7 @@ int predict(int n) {
 int main(int argc, char **argv) {
 
     int n;
-    for ( n = 3; n<= 20; n++) {
-        printf("N is %d, predict: %d, result %d\n", n, predict4(n), func4(n));
+    for ( n = 2; n<= 20; n++) {
+        printf("N is %d, predict: %d, result %d\n", n, predict4(n), func5(n));
     }
 }
