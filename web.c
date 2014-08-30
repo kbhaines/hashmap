@@ -88,8 +88,6 @@ HttpRequest *wsGetRequest(int fd) {
     char line[256];
     fgets(line, sizeof(line), file);
     HttpRequest *result = HttpRequestFromString(line);
-    //close(fd);
-    //fclose(file);
     return result;
 
     while (fgets(line, sizeof(line), file)) {
