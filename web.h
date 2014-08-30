@@ -8,9 +8,8 @@ extern const char *HttpGetUri(const HttpRequest *req);
 extern const char *HttpGetVerb(const HttpRequest *req);
 
 extern void wsInit(void);
-
 extern int wsAccept(void);
-
 extern HttpRequest *wsGetRequest(int fd);
+extern void wsSendResponse(int rsock, const char *response);
 
 #endif
