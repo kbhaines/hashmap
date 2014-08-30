@@ -1,0 +1,45 @@
+#include "web.h"
+
+const char *goodHttpRequests[] = {
+    "GET /index.html HTTP/1.1",
+    "GET /v1/vin/abcdef?api_key=1234 HTTP/1.1",
+    "POST /v2/test?api_key=4567 HTTP/1.1",
+    NULL
+};
+
+const char *goodVerb[] = {
+    "GET", "GET", "POST"
+};
+
+const char *goodUri[] = {
+    "/index.html",
+    "/v1/vin/abcdef?api_key=1234",
+    "/v2/test?api_key=4567"
+};
+
+
+const char *badHttpRequests[] = {
+    "GET /index.htmlHTTP/1.1",
+    "GET/v1/vin/abcdef?api_key=1234 HTTP/1.1",
+    "POST /v2/test?api_key=4567 HTTP/1.1 extra",
+    NULL
+};
+
+#test GoodRequests
+    int testNum = 0;
+    while (goodHttpRequests[testNum] != NULL) {
+        HttpRequest *h = HttpRequestFromString(goodHttpRequests[testNum]);
+        ck_assert_msg(h != NULL, goodHttpRequests[testNum]);
+        ck_assert_str_eq(HttpGetVerb(h), goodVerb[testNum]);
+        ck_assert_str_eq(HttpGetUri(h), goodUri[testNum]);
+        testNum++;
+    }
+
+#test BadRequests
+    int testNum = 0;
+    while (badHttpRequests[testNum] != NULL) {
+        HttpRequest *h = HttpRequestFromString(badHttpRequests[testNum]);
+        ck_assert_msg(h == NULL, badHttpRequests[testNum]);
+        testNum++;
+    }
+

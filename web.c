@@ -1,4 +1,3 @@
-#include "web.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -6,13 +5,41 @@
 #include <string.h>
 #include <netinet/in.h>
 
+#include "csv.h"
+#include "web.h"
+#include "types.h"
+
 static int sock;
 
 struct HttpRequest {
-
-    char *requestLine;
-
+    char *verb;
+    char *uri;
 };
+
+
+const char *HttpGetVerb(const HttpRequest *req) {
+    return req->verb;
+}
+
+const char *HttpGetUri(const HttpRequest *req) {
+    return req->uri;
+}
+
+#define MAX_HTTP_FIELDS 3
+HttpRequest *HttpRequestFromString(const char *reqStr) {
+
+    HttpRequest *result = malloc(sizeof(HttpRequest));
+    char *req = strdup(reqStr);
+    char *fields[MAX_HTTP_FIELDS+1];
+    int32 nFields = splitByCharInPlace(req, fields, MAX_HTTP_FIELDS+1, ' ');
+    if (nFields != 3) {
+        return NULL;
+    }
+
+    result->verb = fields[0];
+    result->uri = fields[1];
+    return result;
+}
 
 void wsInit(void) {
 
@@ -32,7 +59,7 @@ void wsInit(void) {
     server.sin_port = htons(port);
 
     if (bind(sock, (struct sockaddr*) &server, sizeof(server)) < 0) {
-        printf("Error: Couldn't bind to port");
+        printf("Error: Couldn't bind to port %d\n", port);
         exit(1);
     }
 
@@ -49,10 +76,6 @@ int wsAccept() {
     return newsock;
 }
 
-
-const char * HttpGetRequest(HttpRequest *req) {
-    return req->requestLine;
-}
 
 HttpRequest *wsGetRequest(int fd) {
     
@@ -71,7 +94,7 @@ HttpRequest *wsGetRequest(int fd) {
         // strip off the CR/LF characters
         line[--len] = 0;
         line[--len] = 0;
-        result->requestLine = strdup(line);
+        //result->requestLine = strdup(line);
         break;
     }
     fclose(file);
