@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
     }
 
     HttpRequest *req = wsGetRequest(fd);
-    printf("%s\n", HttpGetRequest(req));
+    printf("%s\n", HttpGetUri(req));
     close(fd);
     return vvMain(argc, argv);
 }

@@ -81,8 +81,13 @@ HttpRequest *wsGetRequest(int fd) {
     
     FILE *file = fdopen(fd, "r+");
 
-    HttpRequest *result = malloc(sizeof(HttpRequest));
     char line[256];
+    fgets(line, sizeof(line), file);
+    HttpRequest *result = HttpRequestFromString(line);
+    close(fd);
+    fclose(file);
+    return result;
+
     while (fgets(line, sizeof(line), file)) {
         int len = strlen(line);
         if (len < 2) {
@@ -97,6 +102,4 @@ HttpRequest *wsGetRequest(int fd) {
         //result->requestLine = strdup(line);
         break;
     }
-    fclose(file);
-    return result;
 }
