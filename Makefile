@@ -14,7 +14,7 @@ test: vin.check vin.o web.check web.o csv.o http.o
 	checkmk vin.check > test_vin.c
 	gcc -o test-vin test_vin.c vin.o hashmap.o csv.o $(LIBS)
 	checkmk web.check > test_web.c
-	gcc -o test-web test_web.c web.o csv.o $(LIBS)
+	gcc -o test-web test_web.c http.o csv.o $(LIBS)
 
 testhash: hashmap.o hashmap.h testhash.c
 

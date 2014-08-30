@@ -1,4 +1,4 @@
-#include "web.h"
+#include "http.h"
 
 const char *goodHttpRequests[] = {
     "GET /index.html HTTP/1.1",
