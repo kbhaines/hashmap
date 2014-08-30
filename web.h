@@ -1,15 +1,11 @@
 #ifndef WEB_H_INCLUDED
 #define WEB_H_INCLUDED
 
-typedef struct HttpRequest HttpRequest;
-
-extern HttpRequest *HttpRequestFromString(const char *reqStr);
-extern const char *HttpGetUri(const HttpRequest *req);
-extern const char *HttpGetVerb(const HttpRequest *req);
+#include "http.h"
 
 extern void wsInit(void);
 extern int wsAccept(void);
 extern HttpRequest *wsGetRequest(int fd);
-extern void wsSendResponse(int rsock, const char *response);
+extern void wsSendResponse(int fd, const char *response);
 
 #endif

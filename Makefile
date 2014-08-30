@@ -3,14 +3,14 @@ LIBS=-lcheck -lm -lpthread -lrt
 
 %.o=%.c %.h
 
-main: main.c vin.o hashmap.o csv.o web.o
+main: main.c vin.o hashmap.o csv.o web.o http.o
 
-web: csv
+web: csv http
 
 run: main
 	head -n 1000000 jlrdat/vehicle-data|/usr/bin/time -v ./main
 
-test: vin.check vin.o web.check web.o csv.o
+test: vin.check vin.o web.check web.o csv.o http.o
 	checkmk vin.check > test_vin.c
 	gcc -o test-vin test_vin.c vin.o hashmap.o csv.o $(LIBS)
 	checkmk web.check > test_web.c

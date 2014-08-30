@@ -11,40 +11,6 @@
 
 static int sock;
 
-struct HttpRequest {
-    char *verb;
-    char *uri;
-};
-
-
-const char *HttpGetVerb(const HttpRequest *req) {
-    return req->verb;
-}
-
-const char *HttpGetUri(const HttpRequest *req) {
-    return req->uri;
-}
-
-HttpRequest *HttpRequestFromString(const char *reqStr) {
-
-    if (reqStr == NULL) {
-        return NULL;
-    }
-
-    const int MAX_HTTP_FIELDS = 3;
-    HttpRequest *result = malloc(sizeof(HttpRequest));
-    char *req = strdup(reqStr);
-    char *fields[MAX_HTTP_FIELDS+1];
-    int32 nFields = splitByCharInPlace(req, fields, MAX_HTTP_FIELDS+1, ' ');
-    if (nFields != 3) {
-        return NULL;
-    }
-
-    result->verb = fields[0];
-    result->uri = fields[1];
-    return result;
-}
-
 void wsInit(void) {
 
     int port = 8080;
@@ -82,28 +48,7 @@ int wsAccept() {
 
 
 HttpRequest *wsGetRequest(int fd) {
-    
-    FILE *file = fdopen(fd, "r+");
-
-    char line[256];
-    fgets(line, sizeof(line), file);
-    HttpRequest *result = HttpRequestFromString(line);
-    return result;
-
-    while (fgets(line, sizeof(line), file)) {
-        int len = strlen(line);
-        if (len < 2) {
-            printf("Error: detected invalid line");
-            exit(1);
-        } else if (len == 2) {
-            return result;
-        }
-        // strip off the CR/LF characters
-        line[--len] = 0;
-        line[--len] = 0;
-        //result->requestLine = strdup(line);
-        break;
-    }
+    return HttpRequestFromFd(fd);
 }
 
 void wsSendResponse(int rsock, const char *response) {
