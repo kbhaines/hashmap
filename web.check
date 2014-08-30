@@ -43,3 +43,4 @@ const char *badHttpRequests[] = {
         testNum++;
     }
 
+    ck_assert(HttpRequestFromString(NULL) == NULL);

@@ -28,6 +28,10 @@ const char *HttpGetUri(const HttpRequest *req) {
 #define MAX_HTTP_FIELDS 3
 HttpRequest *HttpRequestFromString(const char *reqStr) {
 
+    if (reqStr == NULL) {
+        return NULL;
+    }
+
     HttpRequest *result = malloc(sizeof(HttpRequest));
     char *req = strdup(reqStr);
     char *fields[MAX_HTTP_FIELDS+1];
