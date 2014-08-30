@@ -3,15 +3,15 @@
 
 typedef struct HttpRequest HttpRequest;
 
+extern const char * HttpGetRequest(HttpRequest *req);
+extern HttpRequest *HttpRequestFromString(const char *reqStr);
+extern const char *HttpGetUri(const HttpRequest *req);
+extern const char *HttpGetVerb(const HttpRequest *req);
+
 extern void wsInit(void);
 
 extern int wsAccept(void);
 
 extern HttpRequest *wsGetRequest(int fd);
 
-extern const char * HttpGetRequest(HttpRequest *req);
-extern HttpRequest *HttpRequestFromString(const char *reqStr);
-
-extern const char *HttpGetUri(const HttpRequest *req);
-extern const char *HttpGetVerb(const HttpRequest *req);
 #endif
