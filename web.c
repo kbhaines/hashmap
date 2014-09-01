@@ -52,6 +52,8 @@ HttpRequest *wsGetRequest(int fd) {
 }
 
 void wsSendResponse(int rsock, const char *response) {
+    char header[128];
+    int len = sprintf(header,"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n");
+    write(rsock, header, len);
     write(rsock, response, strlen(response));
-    close(rsock);
 }

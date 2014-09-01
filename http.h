@@ -9,4 +9,6 @@ extern HttpRequest *HttpRequestFromString(const char *reqStr);
 extern const char *HttpGetUri(const HttpRequest *req);
 extern const char *HttpGetVerb(const HttpRequest *req);
 
+extern void HttpFree(HttpRequest *h);
+
 #endif
