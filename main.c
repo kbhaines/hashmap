@@ -45,7 +45,8 @@ int main(int argc, char **argv) {
             printf("%s %s\n", HttpGetUri(req), vin);
             const VinVehicle *v = getValue(vinHash, vin);
             if (v) {
-                sprintf(resp, "%s %s %s", vvGetMake(v), vvGetModel(v), vvGetYear(v));
+                sprintf(resp, "%s %s %s %s", 
+                    vvGetMake(v), vvGetModel(v), vvGetYear(v), vvGetRecalls(v));
             } else {
                 sprintf(resp, "Error: %s not found", vin);
             }

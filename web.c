@@ -14,7 +14,7 @@ static int sock;
 void wsInit(void) {
 
     int port = 8080;
-    int backlog = 5;
+    int backlog = 200;
 
     sock = socket(AF_INET, SOCK_STREAM, 0);
 
