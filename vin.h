@@ -1,5 +1,6 @@
 #ifndef VINVEHICLE_H_INCLUDED
 #define VINVEHICLE_H_INCLUDED
+#include "hashmap.h"
 typedef struct VinVehicle VinVehicle;
 
 extern const VinVehicle *vvGetFromCsv(const char *line);
@@ -12,4 +13,6 @@ extern const char *vvGetYear(const VinVehicle *vv);
 extern const char *vvGetCountry(const VinVehicle *vv);
 extern const char *vvGetRecalls(const VinVehicle *vv);
 
+extern HashMap *vvLoadHashMapFile(const char *name);
+extern HashMap *vvLoadHashMap(FILE *f);
 #endif

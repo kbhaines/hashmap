@@ -108,7 +108,7 @@ const char *putValue(HashMap *hm, const char *key, const void *value) {
 }
 
 
-const void *getValue(HashMap *hm, char *key) {
+const void *getValue(HashMap *hm, const char *key) {
     KeyVal *kv = findKeyVal(hm, key);
     if (kv) {
        return kv -> value;

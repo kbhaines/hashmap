@@ -68,27 +68,16 @@ const char *vvGetRecalls(const VinVehicle *vv) {
 }
 
 
-int vvMain(int argc, char **argv) {
+HashMap *vvLoadHashMap(FILE *f) {
     HashMap *h = newHashMap();
-
     char line[512];
-    if (argc != 2) {
-        printf("Usage: %s <vinfile>\n", argv[0]);
-        exit(0);
-    }
-    FILE *in = fopen(argv[1],"r");
 
-    if (!in) {
-        printf("Error opening %s\n", argv[1]);
-        exit(1);
-    }
-
-    while (fgets(line, sizeof(line), in)) {
+    while (fgets(line, sizeof(line), f)) {
         int len = strlen(line);
         if (len == sizeof(line)-1)  {
             //printf("Definition is too long, detected at %s, recovering\n", word);
             do {
-                fgets(line, sizeof(line), stdin);
+                fgets(line, sizeof(line), f);
             } while (strlen(line) == sizeof(line)-1);
         }
         line[len-1] = 0;
@@ -99,6 +88,25 @@ int vvMain(int argc, char **argv) {
             printf("Incorrect format: %s\n", line);
         }
     }
+    return h;
+}
+
+HashMap *vvLoadHashMapFile(const char *name) {
+    FILE *in = fopen(name,"r");
+    if (!in) {
+        printf("Error opening %s\n", name);
+        exit(1);
+    }
+    return vvLoadHashMap(in);
+}
+
+int vvMain(int argc, char **argv) {
+
+    if (argc != 2) {
+        printf("Usage: %s <vinfile>\n", argv[0]);
+        exit(0);
+    }
+    HashMap *h = vvLoadHashMapFile(argv[1]);
     dumpHash(h, false);
     return 0;
 }

@@ -4,8 +4,16 @@
 #include <unistd.h>
 #include "vin.h"
 #include "web.h"
+#include "csv.h"
+#include "hashmap.h"
 
 int main(int argc, char **argv) {
+    if (argc != 2) {
+        printf("Usage: %s <vinfile>\n", argv[0]);
+        exit(0);
+    }
+    HashMap *vinHash = vvLoadHashMapFile(argv[1]);
+
     wsInit();
     int fd;
     while (1) {
@@ -25,11 +33,28 @@ int main(int argc, char **argv) {
         }
         char resp[256];
         printf("r");
-        sprintf(resp, "%s\n", HttpGetUri(req));
-        printf("%s\n", HttpGetUri(req));
+
+
+        // Expecting request in format: /v1/vin/<vin> i.e. 4 fields separated
+        // by '/'
+
+        char *uri = strdup(HttpGetUri(req));
+        char *fields[4];
+        if (splitByCharInPlace(uri,fields,4, '/') == 4) {
+            const char *vin = fields[3];
+            printf("%s %s\n", HttpGetUri(req), vin);
+            const VinVehicle *v = getValue(vinHash, vin);
+            if (v) {
+                sprintf(resp, "%s %s %s", vvGetMake(v), vvGetModel(v), vvGetYear(v));
+            } else {
+                sprintf(resp, "Error: %s not found", vin);
+            }
+        } else {
+            sprintf(resp, "Error: %s", HttpGetUri(req));
+        }
+        free(uri);
         wsSendResponse(fd, resp);
         HttpFree(req);
     }
     close(fd);
-    return vvMain(argc, argv);
 }
